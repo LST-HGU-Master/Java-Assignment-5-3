@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import java.io.*;
 /**
  * @version (20220501)
+ * @version (20230609)  supporting both println and print("\n") on Windows
  * 
  * (注意) Prog53クラス内に makeZeroArray()とaddOne()の２つのメソッド が適切に宣言されるまで、
  * 　　　　このテストクラスは「シンボルを見つけられません」というエラーが表示される
@@ -88,7 +89,7 @@ public class Prog53Test {
         Prog53.main(new String[]{"18"});
 
         // assertion
-        String[] prints = bos.toString().split(System.lineSeparator());
+        String[] prints = bos.toString().split("\r\n|\n");
         try {
             assertTrue(prints[1].contains("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"),
                        "mainメソッド内において、makeZeroArray()が返した配列要素のprint結果が期待したものと一致しません!"
