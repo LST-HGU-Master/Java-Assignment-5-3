@@ -1,0 +1,53 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: testMakeZeroArray
+      id: testmakezeroarray
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testMakeZeroArray
+        setup-command: ''
+        command: sudo locale-gen ja_JP.UTF-8 && export LANG=ja_JP.UTF-8 && sudo update-locale
+          && gradle test --tests "Prog53Test.testMakeZeroArray"
+        timeout: 10
+        max-score: 4
+    - name: testAddOne
+      id: testaddone
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testAddOne
+        setup-command: ''
+        command: sudo locale-gen ja_JP.UTF-8 && export LANG=ja_JP.UTF-8 && sudo update-locale
+          && gradle test --tests "Prog53Test.testAddOne"
+        timeout: 10
+        max-score: 4
+    - name: testMain
+      id: testmain
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testMain
+        setup-command: ''
+        command: sudo locale-gen ja_JP.UTF-8 && export LANG=ja_JP.UTF-8 && sudo update-locale
+          && gradle test --tests "Prog53Test.testMain"
+        timeout: 10
+        max-score: 4
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTMAKEZEROARRAY_RESULTS: "${{steps.testmakezeroarray.outputs.result}}"
+        TESTADDONE_RESULTS: "${{steps.testaddone.outputs.result}}"
+        TESTMAIN_RESULTS: "${{steps.testmain.outputs.result}}"
+      with:
+        runners: testmakezeroarray,testaddone,testmain
